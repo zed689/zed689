@@ -7,6 +7,8 @@ sudo apt update && sudo apt install -y build-essential git
 # Clone dan build mkp224o
 git clone https://github.com/cathugger/mkp224o.git
 cd mkp224o
+./autogen.sh
+./configure
 make
 sudo cp mkp224o /usr/local/bin/
 cd ..
