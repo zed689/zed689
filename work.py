@@ -1,24 +1,19 @@
 import socket
 import subprocess
 import multiprocessing
-import random
 import os
 import signal
 
-MASTER_IP = "0.tcp.ap.ngrok.io"  
+MASTER_IP = "0.tcp.ap.ngrok.io"
 PORT = 19495
+TARGET_PATTERN = "honeycipher"
 
-# Tentukan bagian tugas
-PARTS = ["honey", "cipher"]
-WORKER_ID = random.randint(0, 1)
-MY_PART = PARTS[WORKER_ID]
-
-def search_part():
+def search_onion():
     """Cari domain dengan multi-threading."""
-    print(f"[+] Worker mencari: {MY_PART}")
+    print(f"[+] Worker mencari: {TARGET_PATTERN}")
 
     process = subprocess.Popen(
-        ["mkp224o", "-t", str(multiprocessing.cpu_count()), MY_PART],
+        ["mkp224o", "-t", str(multiprocessing.cpu_count()), TARGET_PATTERN],
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         text=True,
@@ -26,7 +21,7 @@ def search_part():
     )
 
     for line in process.stdout:
-        if line.startswith(MY_PART):
+        if line.startswith(TARGET_PATTERN):
             print(f"[✔] Ditemukan: {line.strip()}")
             process.terminate()
             return line.strip()
@@ -34,10 +29,10 @@ def search_part():
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((MASTER_IP, PORT))
 
-found_onion = search_part()
-client.sendall(f"{MY_PART}|{found_onion}".encode())
+found_onion = search_onion()
+client.sendall(found_onion.encode())
 
-# Tunggu perintah dari Master
+# Tunggu perintah dari Master untuk berhenti
 while True:
     try:
         message = client.recv(1024).decode()
