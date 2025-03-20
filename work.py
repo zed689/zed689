@@ -2,12 +2,13 @@ import socket
 import subprocess
 import random
 
-MASTER_IP = "0.tcp.ap.ngrok.io"  # Ganti dengan IP server Master
-PORT = 14161
+MASTER_IP = "0.tcp.ap.ngrok.io"  # Ganti dengan IP Master
+PORT = 10372
 
-# Masing-masing Worker mencari bagian yang berbeda
-PARTS = ["ho", "ney", "ci", "ph", "er"]
-WORKER_ID = random.randint(0, 4)  # Setiap Worker mencari bagian berbeda
+
+# Pembagian tugas
+PARTS = ["honey", "cipher"]
+WORKER_ID = random.randint(0, 1)  # Hanya 2 Worker
 MY_PART = PARTS[WORKER_ID]
 
 def search_part():
